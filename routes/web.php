@@ -17,3 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/collection', function() {
+    $arr = ['1','2','3', '4' => 'empat'];
+    $collection = collect($arr);
+    // dd($arr);
+    dd($collection);
+});
