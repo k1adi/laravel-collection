@@ -17,4 +17,12 @@ class CollectionTest extends TestCase
         // equal with ignore the index of array
         $this->assertEqualsCanonicalizing($arr, $collection->all());
     }
+
+    public function testForEach()
+    {
+        $collection = ([1,2,3,4,5,6,7]);
+        foreach($collection as $index => $value){
+            $this->assertEquals($index + 1, $value);
+        }
+    }
 }
