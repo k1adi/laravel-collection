@@ -247,4 +247,37 @@ class CollectionTest extends TestCase
             2,4,6,8,10
         ], $result->all());
     }
+
+    /**
+     * Partioning
+     * to get two collection that contains result of filter not or result
+     * partition() method will make two collection
+     * the first collection for result of filter
+     * the second collection for nor result of filter
+     */
+
+    public function testPartition()
+    {
+        $collection = collect([
+            'Rizki' => 100,
+            'Adi' => 95,
+            'Asep' => 90,
+            'Joko' => 85
+        ]);
+
+        [$result1, $result2] = $collection->partition(function ($value, $key) {
+            return $value >= 90;
+        });
+
+        $this->assertEquals([
+            'Rizki' => 100,
+            'Adi' => 95,
+            'Asep' => 90
+        ], $result1->all());
+
+        
+        $this->assertEquals([
+            'Joko' => 85
+        ], $result2->all());
+    }
 }
