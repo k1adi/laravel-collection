@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Data\Person;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -55,5 +56,73 @@ class CollectionTest extends TestCase
         // of collection
         $collection->put(1, 5);
         $this->assertEqualsCanonicalizing([5,2], $collection->all());
+    }
+
+    /** 
+     * Mapping
+     * transform data to another data
+     * need a function as parameter to tranform the data
+     * result index of mapping will be the same with the collection
+    */
+
+    public function testMap()
+    {
+        $collection = collect([1,2,3]);
+        // Iterate all data and send all of the data to the function
+        $result = $collection->map(function ($item) {
+            return $item * 2;
+        });
+
+        $this->assertEqualsCanonicalizing([2,4,6], $result->all());
+    }
+
+    public function testMapInto()
+    {
+        $collection = collect(['Rizki', 'Adi']);
+        // Iterate all data and create new object for Class
+        // with sending param of each data
+        $result = $collection->mapInto(Person::class);
+        $this->assertEquals([new Person('Rizki'), new Person('Adi')], $result->all());
+    }
+
+    public function testMapSpread()
+    {
+        $collection = collect([
+            ['Rizki', 'Adi'],
+            ['Asep', 'AC']
+        ]);
+
+        // Iterate all data and sending each data as param
+        $result = $collection->mapSpread(function($firstName, $lastName) {
+            $fullName = "$firstName $lastName";
+            return new Person($fullName);
+        });
+
+        $this->assertEquals([
+            new Person('Rizki Adi'),
+            new Person('Asep AC')
+        ], $result->all());
+    }
+
+    public function testMapToGroup()
+    {
+        $collection = collect([
+            ['name' => 'Rizki', 'dept' => 'IT'],
+            ['name' => 'Adi', 'dept' => 'IT'],
+            ['name' => 'Nug', 'dept' => 'HR']
+        ]);
+
+        // iterate all data and sending each data to function
+        // funstion must return single key-value array to group new collection
+        $result = $collection->mapToGroups(function ($item) {
+            return [
+                $item['dept'] => $item['name']
+            ];
+        });
+        
+        $this->assertEquals([
+            'IT' => collect(['Rizki', 'Adi']),
+            'HR' => collect(['Nug'])
+        ], $result->all());
     }
 }
