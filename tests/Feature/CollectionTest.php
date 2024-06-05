@@ -201,4 +201,16 @@ class CollectionTest extends TestCase
             ['Coding', 'Writing', 'Riding', 'Hiking'], $hobbies->all()
         );
     }
+
+    // Tranform collection to string
+    public function testJoin()
+    {
+        $collection = collect(['Rizki', 'Adi', 'Budi', 'Asep', 'Mamat']);
+
+        // join() method need 2 param as separator (glue'' and finalGlue'')
+        $this->assertEquals('RizkiAdiBudiAsepMamat', $collection->join('')); // as default is ''
+        $this->assertEquals('Rizki-Adi-Budi-Asep-Mamat', $collection->join('-'));
+        $this->assertEquals('Rizki,Adi,Budi,Asep_Mamat', $collection->join(',', '_'));
+        $this->assertEquals('Rizki, Adi, Budi, Asep & Mamat', $collection->join(', ', ' & '));
+    }
 }
