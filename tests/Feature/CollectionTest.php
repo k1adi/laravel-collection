@@ -213,4 +213,38 @@ class CollectionTest extends TestCase
         $this->assertEquals('Rizki,Adi,Budi,Asep_Mamat', $collection->join(',', '_'));
         $this->assertEquals('Rizki, Adi, Budi, Asep & Mamat', $collection->join(', ', ' & '));
     }
+
+    public function testFilter()
+    {
+        $collection = collect([
+            'Rizki' => 100,
+            'Adi' => 95,
+            'Asep' => 90,
+            'Joko' => 85
+        ]);
+
+        $result = $collection->filter(function($value, $key) {
+            return $value >= 90;
+        });
+
+        $this->assertEquals([
+            'Rizki' => 100,
+            'Adi' => 95,
+            'Asep' => 90
+        ], $result->all());
+    }
+
+    public function testFilterIndex()
+    {
+        $collection = collect([1,2,3,4,5,6,7,8,9,10]);
+        $result = $collection->filter(function ($value, $key) {
+            return $value % 2 == 0;
+        });
+
+        // If the collection is index-based, please consider using a filter.
+        // This is because the index will be removed if the data does not yield a result.
+        $this->assertEqualsCanonicalizing([
+            2,4,6,8,10
+        ], $result->all());
+    }
 }
