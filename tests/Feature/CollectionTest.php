@@ -280,4 +280,13 @@ class CollectionTest extends TestCase
             'Joko' => 85
         ], $result2->all());
     }
+
+    public function testTesting()
+    {
+        $collection = collect(['Rizki', 'Adi', 'Nugroho']);
+        self::assertTrue($collection->contains('Rizki'));
+        self::assertTrue($collection->contains(function ($value, $key) {
+            return $value == 'Adi';
+        }));
+    }
 }
