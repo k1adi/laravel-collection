@@ -126,12 +126,18 @@ class CollectionTest extends TestCase
         ], $result->all());
     }
 
+    /** 
+     * Zipping
+     * grouping of two collection
+    */
     public function testZip()
     {
         $collection1 = collect([1, 2, 3]);
         $collection2 = collect([4, 5, 6]);
         $collection3 = $collection1->zip($collection2);
 
+        // zip() is grouping item by index of two collection 
+        // to create new collection
         $this->assertEquals([
             collect([1, 4]),
             collect([2, 5]),
@@ -145,6 +151,7 @@ class CollectionTest extends TestCase
         $collection2 = collect([4, 5, 6]);
         $collection3 = $collection1->concat($collection2);
 
+        // concat() is merging two of collection
         $this->assertEqualsCanonicalizing([1,2,3,4,5,6], $collection3->all());
     }
 
@@ -154,9 +161,44 @@ class CollectionTest extends TestCase
         $collection2 = collect(['Rizki', 'Indonesia']);
         $collection3 = $collection1->combine($collection2);
 
+        // combine() is grouping item of two collection
+        // and make new collection based index-key value
         $this->assertEquals([
             'name' => 'Rizki',
             'country' => 'Indonesia'
         ], $collection3->all());
+    }
+
+    /** 
+     * Flattening
+     * transform 3D collection (nested collection)
+     * to flat collection (2D collection/array)
+    */
+    public function testCollapse()
+    {
+        $collection = collect([
+            [1,2,3],
+            [4,5,6],
+            [7,8,9]
+        ]);
+
+        $result = $collection->collapse();
+        $this->assertEqualsCanonicalizing([1,2,3,4,5,6,7,8,9], $result->all());
+    }
+
+    public function testFlatMap()
+    {
+        $collection = collect([
+            ['name' => 'Rizki', 'hobbies' => ['Coding', 'Writing']],
+            ['name' => 'Adi', 'hobbies' => ['Riding', 'Hiking']]
+        ]);
+
+        $hobbies = $collection->flatMap(function ($item){
+            return $item['hobbies'];
+        });
+
+        $this->assertEqualsCanonicalizing(
+            ['Coding', 'Writing', 'Riding', 'Hiking'], $hobbies->all()
+        );
     }
 }
