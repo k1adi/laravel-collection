@@ -434,4 +434,18 @@ class CollectionTest extends TestCase
         $oneData = collect([1]);
         self::assertTrue($oneData->containsOneItem());
     }
+
+    public function testOrder()
+    {
+        $collection = collect([1,3,5,2,4]);
+
+        $result = $collection->sort();
+        $this->assertEqualsCanonicalizing([1,2,3,4,5], $result->all());
+        
+        $result = $collection->sortDesc();
+        $this->assertEqualsCanonicalizing([5,4,3,2,1], $result->all());
+
+        $result = $collection->reverse();
+        $this->assertEqualsCanonicalizing([4,2,5,3,1], $result->all());
+    }
 }
