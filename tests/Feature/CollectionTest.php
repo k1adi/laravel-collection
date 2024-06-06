@@ -407,4 +407,13 @@ class CollectionTest extends TestCase
         });
         $this->assertEquals(2, $result);
     }
+
+    public function testRandom()
+    {
+        $collection = collect([1,2,3,4,5,6,7,8,9,10]);
+        $result = $collection->random();
+
+        // dd($collection->random(5));
+        self::assertTrue(in_array($result, [1,2,3,4,5,6,7,8,9]));
+    }
 }
