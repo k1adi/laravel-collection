@@ -319,6 +319,7 @@ class CollectionTest extends TestCase
         })->all());
     }
 
+    // To take part of collection by start index and until 
     public function testSlicing()
     {
         $collection = collect([1,2,3,4,5,6,7,8,9]);
@@ -327,5 +328,48 @@ class CollectionTest extends TestCase
 
         $result = $collection->slice(3,4);
         $this->assertEqualsCanonicalizing([4,5,6,7], $result->all());
+    }
+
+    /**
+     * Take & Skip
+     * same as slicing but with difference method / fuction
+     * take(length)
+     */
+
+    public function testTake()
+    {
+        $collection = collect([1,2,3,4,5,6,7,8,9]);
+        $result = $collection->take(5);
+        $this->assertEqualsCanonicalizing([1,2,3,4,5], $result->all());
+
+        $result = $collection->take(-2);
+        $this->assertEqualsCanonicalizing([8,9], $result->all());
+
+        $result = $collection->takeUntil(function($value, $key) {
+            return $value == 4;
+        });
+        $this->assertEqualsCanonicalizing([1,2,3], $result->all());
+
+        $result = $collection->takeWhile(function($value, $key) {
+            return $value <= 6;
+        });
+        $this->assertEqualsCanonicalizing([1,2,3,4,5,6], $result->all());
+    }
+
+    public function testSkip()
+    {
+        $collection = collect([1,2,3,4,5,6,7,8,9]);
+        $result = $collection->skip(5);
+        $this->assertEqualsCanonicalizing([6,7,8,9], $result->all());
+
+        $result = $collection->skipUntil(function($value, $key) {
+            return $value == 4;
+        });
+        $this->assertEqualsCanonicalizing([4,5,6,7,8,9], $result->all());
+
+        $result = $collection->skipWhile(function($value, $key) {
+            return $value <= 6;
+        });
+        $this->assertEqualsCanonicalizing([7,8,9], $result->all());
     }
 }
