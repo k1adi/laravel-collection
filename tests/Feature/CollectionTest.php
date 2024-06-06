@@ -416,4 +416,22 @@ class CollectionTest extends TestCase
         // dd($collection->random(5));
         self::assertTrue(in_array($result, [1,2,3,4,5,6,7,8,9]));
     }
+
+    // Checking existence data in collection
+    public function testExistence()
+    {
+        // isEmpty() : bool
+        $empty = collect([]);
+        self::assertTrue($empty->isEmpty());
+
+        $collection = collect([1,2,3]);
+        self::assertTrue($collection->isNotEmpty());
+        self::assertTrue($collection->contains(1));
+        self::assertTrue($collection->contains(function($value,$key) {
+            return $value == 3;
+        }));
+
+        $oneData = collect([1]);
+        self::assertTrue($oneData->containsOneItem());
+    }
 }
